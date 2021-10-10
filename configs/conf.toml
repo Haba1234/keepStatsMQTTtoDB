@@ -1,0 +1,29 @@
+title = "MQTT and DT client configuration"
+
+# Influxdb settings
+[storage]
+db-uri = "http://storagedb:8086"
+bucket = "my-bucket"
+org = "my-org"
+token = "9FgfrDwnlTxUb79T86gmoIHDu-ladw7N3EAWH4TwkFxqFTaZKKUxBI5jibpz4-ME-Sca4pxIk8ss6jcEkr5zQA=="
+
+# MQTT settings
+[mqtt]
+# Client ID. Maximum 23 characters.
+clientID = "mqtt-client1"
+
+[servers]
+    [servers.sprut]
+    schema = "tcp" # 'schema': tcp, ssl or ws
+    server = "192.168.30.18"
+    port = "44444"
+    user = ""
+    password = ""
+    # topics
+    Qos = 0
+    [servers.sprut.topics.1]
+    measurement = "T подачи воды"
+    name = "/spruthub/accessories/127/11/13"
+    [servers.sprut.topics.2]
+    measurement = "Т обратной воды"
+    name = "/spruthub/accessories/128/11/13"
