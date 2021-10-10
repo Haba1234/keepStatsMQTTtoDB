@@ -7,10 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"keepStatsMQTTtoDB/internal/app"
-	"keepStatsMQTTtoDB/internal/clientmqtt"
-	"keepStatsMQTTtoDB/internal/config"
-	"keepStatsMQTTtoDB/internal/storage"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/clientmqtt"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/config"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/storage"
 )
 
 var configFile string

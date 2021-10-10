@@ -1,7 +1,7 @@
 package app
 
 import (
-	"keepStatsMQTTtoDB/internal/config"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/config"
 )
 
 // ClientMQTTConf структура конфигурации.

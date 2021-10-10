@@ -1,10 +1,9 @@
-module keepStatsMQTTtoDB
+module github.com/Haba1234/keepStatsMQTTtoDB
 
 go 1.17
 
 require (
 	github.com/eclipse/paho.mqtt.golang v1.3.5
-	github.com/heetch/confita v0.10.0
 	github.com/influxdata/influxdb-client-go/v2 v2.5.1
 )
 

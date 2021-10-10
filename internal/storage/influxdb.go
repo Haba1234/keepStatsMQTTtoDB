@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
 	"github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
-	"keepStatsMQTTtoDB/internal/app"
 )
 
 // DB структура сервера.

@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"keepStatsMQTTtoDB/internal/app"
 )
 
 // ClientMQTT структура клиента MQTT.
