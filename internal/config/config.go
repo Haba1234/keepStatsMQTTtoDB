@@ -6,9 +6,15 @@ import (
 
 // Config структура конфигурации.
 type Config struct {
+	Logger  LogConf           // Logger - конфигурация Loggera.
 	MQTT    MQTTConf          // MQTT - конфигурация MQTT клиента.
 	Servers map[string]Server // Servers - конфигурация серверов (брокеров) MQTT.
 	Storage StorageConf       // Storage - конфигурация для подключения к БД.
+}
+
+// LogConf структура конфигурации.
+type LogConf struct {
+	Level string `toml:"log-level"` // Level - уровень логирования.
 }
 
 // MQTTConf структура конфигурации.
@@ -43,6 +49,7 @@ type StorageConf struct {
 func NewConfig(path string) (*Config, error) {
 	// default values
 	cfg := Config{
+		Logger:  LogConf{},
 		MQTT:    MQTTConf{},
 		Servers: map[string]Server{},
 		Storage: StorageConf{},
