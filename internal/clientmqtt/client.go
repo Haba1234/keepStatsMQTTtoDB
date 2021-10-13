@@ -10,12 +10,14 @@ import (
 	"time"
 
 	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/logger"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 // ClientMQTT структура клиента MQTT.
 type ClientMQTT struct {
 	ctx        context.Context
+	log        *logger.Logger
 	cfgClient  app.ClientMQTTConf
 	client     mqtt.Client
 	opts       *mqtt.ClientOptions
@@ -25,8 +27,9 @@ type ClientMQTT struct {
 }
 
 // NewClient конструктор.
-func NewClient(cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
+func NewClient(log *logger.Logger, cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
 	return &ClientMQTT{
+		log:        log,
 		cfgClient:  cfgClient,
 		serverName: serverName,
 		server:     cgfServ,
@@ -79,7 +82,7 @@ func (c *ClientMQTT) Start(ctx context.Context, pointsCh chan<- app.Point) error
 		return err
 	}
 
-	log.Println("Status: ", c.client.IsConnected())
+	c.log.Info("Status: ", c.client.IsConnected())
 	return nil
 }
 
@@ -104,21 +107,21 @@ func (c *ClientMQTT) sub(client mqtt.Client, topics map[string]app.Topic) error 
 		if token.Error() != nil {
 			return token.Error()
 		}
-		log.Printf("Subscribed to topics %v", filters)
+		c.log.Info("Subscribed to topics %v", filters)
 	}
 	return nil
 }
 
 func (c *ClientMQTT) connectHandler(_ mqtt.Client) {
-	log.Println("client connected to server:", c.serverName)
+	c.log.Info("client connected to server:", c.serverName)
 }
 
 func (c *ClientMQTT) connectLostHandler(_ mqtt.Client, err error) {
-	log.Printf("server: %s. Connect lost: %v", c.serverName, err)
+	c.log.Errorf("server: %s. Connect lost: %v", c.serverName, err)
 }
 
 func (c *ClientMQTT) messageHandler(_ mqtt.Client, msg mqtt.Message) {
-	log.Printf("received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
+	c.log.Debugf("received message: %s from topic: %s", msg.Payload(), msg.Topic())
 	go c.sendPointToStorage(msg)
 }
 
@@ -126,12 +129,12 @@ func (c *ClientMQTT) sendPointToStorage(msg mqtt.Message) {
 	message := msg
 	var m interface{}
 	if err := json.Unmarshal(message.Payload(), &m); err != nil {
-		log.Printf("server: %s. Message could not be parsed (%s): %s", c.serverName, message.Payload(), err)
+		c.log.Errorf("server: %s. Message could not be parsed (%s): %s", c.serverName, message.Payload(), err)
 	}
 
 	val, ok := c.server.Topics[message.Topic()]
 	if !ok {
-		log.Println("accepted topic was not found in the database. Recording in DB was canceled")
+		c.log.Errorf("accepted topic was not found in the database. Recording in DB was canceled")
 		return
 	}
 
