@@ -1,5 +1,9 @@
 title = "MQTT and DT client configuration"
 
+[global]
+# logging level: debug, error, info
+log-level = "debug"
+
 # Influxdb settings
 [storage]
 db-uri = "http://storagedb:8086"
