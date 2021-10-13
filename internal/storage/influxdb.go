@@ -2,11 +2,10 @@ package storage
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"time"
 
 	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/logger"
 	"github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
@@ -14,6 +13,7 @@ import (
 
 // DB структура сервера.
 type DB struct {
+	log      *logger.Logger
 	bucket   string
 	org      string
 	token    string
@@ -25,8 +25,9 @@ type DB struct {
 const timeout = 10 // Пауза между проверками готовности БД к работе (при первом запуске БД запускается не мгновенно).
 
 // NewStorage конструктор.
-func NewStorage(cfg app.StorageConf) *DB {
+func NewStorage(log *logger.Logger, cfg app.StorageConf) *DB {
 	return &DB{
+		log:    log,
 		bucket: cfg.Bucket,
 		org:    cfg.Org,
 		token:  cfg.Token,
@@ -49,11 +50,11 @@ test:
 			db.client = influxdb2.NewClient(db.url, db.token)
 			ok, err := db.client.Ready(ctx)
 			if err != nil {
-				log.Println("DB not ready:", err)
+				db.log.Info("DB not ready:", err)
 				break
 			}
 			if ok {
-				log.Println("DB ready!")
+				db.log.Info("DB ready!")
 				break test
 			}
 		}
@@ -65,7 +66,7 @@ test:
 	// Create go proc for reading and logging errors
 	go func() {
 		for err := range errorsCh {
-			fmt.Printf("write error: %s\n", err.Error())
+			db.log.Errorf("write error: %s", err.Error())
 		}
 	}()
 
@@ -94,7 +95,6 @@ loop:
 }
 
 func preparePoint(data app.Point) *write.Point {
-	log.Println("Перед записью data:", data)
 	return influxdb2.NewPoint(data.Measurement,
 		data.Tag,
 		map[string]interface{}{
