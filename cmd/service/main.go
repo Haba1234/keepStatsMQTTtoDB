@@ -25,12 +25,17 @@ func main() {
 	flag.Parse()
 	cfg, err := config.NewConfig(configFile)
 	if err != nil {
-		fmt.Printf("config error: %v", err)
+		fmt.Println("config error:", err)
 		os.Exit(1)
 	}
 
-	log := logger.NewLogger()
-	log.Info(cfg)
+	log, err := logger.NewLogger(cfg.Logger)
+	if err != nil {
+		fmt.Println("logger error:", err)
+		os.Exit(1)
+	}
+
+	log.Debug("pkg", "main", cfg)
 
 	client := clientmqtt.NewClient(
 		log,
@@ -48,22 +53,22 @@ func main() {
 	pointsCh := make(chan app.Point, 200)
 
 	if err = db.Start(ctx, pointsCh); err != nil {
-		log.Error("failed to start Storage service: ", err.Error())
+		log.Error("failed to start Storage service:", err.Error())
 		cancel()
 	}
 
 	if err = client.Start(ctx, pointsCh); err != nil {
-		log.Error("failed to start MQTT service: ", err.Error())
+		log.Error("failed to start MQTT service:", err.Error())
 		cancel()
 	}
 
 	<-ctx.Done()
 
 	if err := db.Stop(); err != nil {
-		log.Error("failed to stop Storage service: ", err.Error())
+		log.Error("failed to stop Storage service:", err.Error())
 	}
 	if err := client.Stop(); err != nil {
-		log.Error("failed to stop MQTT service: ", err.Error())
+		log.Error("failed to stop MQTT service:", err.Error())
 	}
 
 	close(pointsCh)
