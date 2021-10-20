@@ -17,7 +17,7 @@ import (
 // ClientMQTT структура клиента MQTT.
 type ClientMQTT struct {
 	ctx        context.Context
-	log        *logger.Logger
+	log        *logger.Log
 	cfgClient  app.ClientMQTTConf
 	client     mqtt.Client
 	opts       *mqtt.ClientOptions
@@ -27,7 +27,7 @@ type ClientMQTT struct {
 }
 
 // NewClient конструктор.
-func NewClient(log *logger.Logger, cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
+func NewClient(log *logger.Log, cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
 	return &ClientMQTT{
 		log:        log,
 		cfgClient:  cfgClient,
@@ -37,6 +37,7 @@ func NewClient(log *logger.Logger, cfgClient app.ClientMQTTConf, serverName stri
 }
 
 func (c *ClientMQTT) Start(ctx context.Context, pointsCh chan<- app.Point) error {
+	// TODO включать только при уровне логирования DEBUG
 	mqtt.ERROR = log.New(os.Stdout, "[ERROR] ", 0)
 	mqtt.CRITICAL = log.New(os.Stdout, "[CRIT] ", 0)
 	mqtt.WARN = log.New(os.Stdout, "[WARN]  ", 0)
@@ -121,7 +122,7 @@ func (c *ClientMQTT) connectLostHandler(_ mqtt.Client, err error) {
 }
 
 func (c *ClientMQTT) messageHandler(_ mqtt.Client, msg mqtt.Message) {
-	c.log.Debugf("received message: %s from topic: %s", msg.Payload(), msg.Topic())
+	c.log.Debug("pkg", "mqtt", "received message:", msg.Payload(), "from topic:", msg.Topic())
 	go c.sendPointToStorage(msg)
 }
 
