@@ -1,8 +1,0 @@
-title = "Data base configuration"
-
-# Influxdb settings
-[influxdb]
-db-uri = "http//storagedb:8086"
-bucket = "my-bucket"
-org = "my-org"
-token = "9FgfrDwnlTxUb79T86gmoIHDu-ladw7N3EAWH4TwkFxqFTaZKKUxBI5jibpz4-ME-Sca4pxIk8ss6jcEkr5zQA=="
