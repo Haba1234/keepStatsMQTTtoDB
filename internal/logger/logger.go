@@ -1,53 +1,59 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/Haba1234/keepStatsMQTTtoDB/internal/config"
 	"github.com/sirupsen/logrus"
 )
 
-// Logger структура логгера.
-type Logger struct {
-	Log *logrus.Logger
+// Log структура логгера.
+type Log struct {
+	Logger *logrus.Logger
 }
 
 // TODO добавить поддержку записи в файл.
 
 // NewLogger конструктор.
-func NewLogger() *Logger {
-	log := &logrus.Logger{
-		Out:   os.Stdout,
-		Level: logrus.DebugLevel,
-	}
-	log.SetFormatter(&logrus.TextFormatter{
+func NewLogger(cfg config.LogConf) (*Log, error) {
+	log := logrus.New()
+	log.SetOutput(os.Stdout)
+	log.Formatter = &logrus.TextFormatter{
 		TimestampFormat:  "2006-01-02 15:04:05",
 		DisableColors:    false,
+		ForceColors:      true,
 		FullTimestamp:    true,
 		QuoteEmptyFields: true,
-	})
-	return &Logger{log}
+	}
+
+	level, err := logrus.ParseLevel(cfg.Level)
+	if err != nil {
+		return nil, fmt.Errorf("logger. Error in settings (level: %s): %w", cfg.Level, err)
+	}
+	log.SetLevel(level)
+
+	return &Log{log}, nil
 }
 
-func (l *Logger) Info(arg ...interface{}) {
-	l.Log.Info(arg)
+func (l *Log) Info(args ...interface{}) {
+	l.Logger.Info(args...)
 }
 
-func (l *Logger) Infof(format string, arg ...interface{}) {
-	l.Log.Infof(format, arg)
+func (l *Log) Infof(format string, args ...interface{}) {
+	l.Logger.Infof(format, args...)
 }
 
-func (l *Logger) Error(arg ...interface{}) {
-	l.Log.Error(arg)
+func (l *Log) Error(args ...interface{}) {
+	l.Logger.Error(args...)
 }
 
-func (l *Logger) Errorf(format string, arg ...interface{}) {
-	l.Log.Errorf(format, arg)
+func (l *Log) Errorf(format string, args ...interface{}) {
+	l.Logger.Errorf(format, args...)
 }
 
-func (l *Logger) Debug(arg ...interface{}) {
-	l.Log.Debug(arg)
-}
-
-func (l *Logger) Debugf(format string, arg ...interface{}) {
-	l.Log.Debugf(format, arg)
+func (l *Log) Debug(name string, param interface{}, args ...interface{}) {
+	l.Logger.WithFields(logrus.Fields{
+		name: param,
+	}).Debug(args...)
 }
