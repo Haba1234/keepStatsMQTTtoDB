@@ -13,7 +13,7 @@ import (
 
 // DB структура сервера.
 type DB struct {
-	log      *logger.Logger
+	log      *logger.Log
 	bucket   string
 	org      string
 	token    string
@@ -25,7 +25,7 @@ type DB struct {
 const timeout = 10 // Пауза между проверками готовности БД к работе (при первом запуске БД запускается не мгновенно).
 
 // NewStorage конструктор.
-func NewStorage(log *logger.Logger, cfg app.StorageConf) *DB {
+func NewStorage(log *logger.Log, cfg app.StorageConf) *DB {
 	return &DB{
 		log:    log,
 		bucket: cfg.Bucket,
