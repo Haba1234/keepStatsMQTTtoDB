@@ -37,5 +37,23 @@ services:
       restart_policy:
         condition: on-failure
 
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - storagedb
+    #environment:
+      #- GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      #- GF_AUTH_ANONYMOUS_ENABLED=true
+      #- GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana:/etc/grafana/provisioning/
+    deploy:
+      restart_policy:
+        condition: on-failure
+
 volumes:
   influxdb2:
+  grafana-storage:

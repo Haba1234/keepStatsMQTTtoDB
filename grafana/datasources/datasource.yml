@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: myinfluxdb_v2_flux
+    type: influxdb
+    access: proxy
+    url: http://storagedb:8086
+    secureJsonData:
+      token: 9FgfrDwnlTxUb79T86gmoIHDu-ladw7N3EAWH4TwkFxqFTaZKKUxBI5jibpz4-ME-Sca4pxIk8ss6jcEkr5zQA==
+    jsonData:
+      version: Flux
+      organization: my-org
+      defaultBucket: my-bucket
+      tlsSkipVerify: true
