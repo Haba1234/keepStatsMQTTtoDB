@@ -1,6 +1,6 @@
 title = "MQTT and DT client configuration"
 
-[global]
+[logger]
 # logging level: debug, error, info
 log-level = "debug"
 
@@ -31,3 +31,33 @@ clientID = "mqtt-client1"
     [servers.sprut.topics.2]
     measurement = "Т обратной воды"
     name = "/spruthub/accessories/128/11/13"
+    [servers.sprut.topics.3]
+    measurement = "ТП. T подачи воды"
+    name = "/spruthub/accessories/130/11/13"
+    [servers.sprut.topics.4]
+    measurement = "ТП. Т обратной воды"
+    name = "/spruthub/accessories/131/11/13"
+    [servers.sprut.topics.5]
+    measurement = "ГВС. Т обратной воды"
+    name = "/spruthub/accessories/129/11/13"
+    [servers.sprut.topics.6]
+    measurement = "Котельная. Т воздуха"
+    name = "/spruthub/accessories/126/11/13"
+    [servers.sprut.topics.7]
+    measurement = "Ульяна. Т пола у окна"
+    name = "/spruthub/accessories/112/11/13"
+    [servers.sprut.topics.8]
+    measurement = "Ульяна. Т пола Шкаф"
+    name = "/spruthub/accessories/114/11/13"
+    [servers.sprut.topics.9]
+    measurement = "Матвей. Т пола"
+    name = "/spruthub/accessories/115/11/13"
+    [servers.sprut.topics.10]
+    measurement = "Прихожая. Т пола"
+    name = "/spruthub/accessories/113/11/13"
+    [servers.sprut.topics.11]
+    measurement = "Котел. Команда"
+    name = "/spruthub/accessories/102/10/12"
+    [servers.sprut.topics.12]
+    measurement = "Насос ТП. Команда"
+    name = "/spruthub/accessories/105/10/12"
