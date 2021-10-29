@@ -32,6 +32,7 @@ func NewLogger(cfg config.LogConf) (*Log, error) {
 		return nil, fmt.Errorf("logger. Error in settings (level: %s): %w", cfg.Level, err)
 	}
 	log.SetLevel(level)
+	log.Debug("set level: ", level)
 
 	return &Log{log}, nil
 }
@@ -52,8 +53,16 @@ func (l *Log) Errorf(format string, args ...interface{}) {
 	l.Logger.Errorf(format, args...)
 }
 
-func (l *Log) Debug(name string, param interface{}, args ...interface{}) {
-	l.Logger.WithFields(logrus.Fields{
-		name: param,
-	}).Debug(args...)
+func (l *Log) Debug(args ...interface{}) {
+	if len(args) >= 3 {
+		switch args[0].(type) {
+		case string:
+			l.Logger.WithFields(logrus.Fields{
+				fmt.Sprintf("%v", args[0]): args[1],
+			}).Debug(args[2:])
+			return
+		default:
+		}
+	}
+	l.Logger.Debug(args...)
 }
