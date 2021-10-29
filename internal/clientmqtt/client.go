@@ -10,14 +10,13 @@ import (
 	"time"
 
 	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
-	"github.com/Haba1234/keepStatsMQTTtoDB/internal/logger"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 // ClientMQTT структура клиента MQTT.
 type ClientMQTT struct {
 	ctx        context.Context
-	log        *logger.Log
+	log        app.Logger
 	cfgClient  app.ClientMQTTConf
 	client     mqtt.Client
 	opts       *mqtt.ClientOptions
@@ -27,7 +26,7 @@ type ClientMQTT struct {
 }
 
 // NewClient конструктор.
-func NewClient(log *logger.Log, cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
+func NewClient(log app.Logger, cfgClient app.ClientMQTTConf, serverName string, cgfServ app.ServerMQTTConf) *ClientMQTT {
 	return &ClientMQTT{
 		log:        log,
 		cfgClient:  cfgClient,
@@ -37,12 +36,14 @@ func NewClient(log *logger.Log, cfgClient app.ClientMQTTConf, serverName string,
 }
 
 func (c *ClientMQTT) Start(ctx context.Context, pointsCh chan<- app.Point) error {
-	// TODO включать только при уровне логирования DEBUG
-	mqtt.ERROR = log.New(os.Stdout, "[ERROR] ", 0)
-	mqtt.CRITICAL = log.New(os.Stdout, "[CRIT] ", 0)
-	mqtt.WARN = log.New(os.Stdout, "[WARN]  ", 0)
+	// TODO перенаправить в logger
+	if c.log.GetLevel() == "debug" {
+		mqtt.ERROR = log.New(os.Stdout, "[ERROR] ", 0)
+		mqtt.CRITICAL = log.New(os.Stdout, "[CRIT] ", 0)
+		mqtt.WARN = log.New(os.Stdout, "[WARN]  ", 0)
+	}
 
-	c.ctx = ctx // TODO удалить?
+	c.ctx = ctx
 	c.pointsCh = pointsCh
 
 	if len(c.server.Topics) == 0 {

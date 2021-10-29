@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/Haba1234/keepStatsMQTTtoDB/internal/app"
-	"github.com/Haba1234/keepStatsMQTTtoDB/internal/logger"
 	"github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
@@ -13,7 +12,7 @@ import (
 
 // DB структура сервера.
 type DB struct {
-	log      *logger.Log
+	log      app.Logger
 	bucket   string
 	org      string
 	token    string
@@ -25,7 +24,7 @@ type DB struct {
 const timeout = 10 // Пауза между проверками готовности БД к работе (при первом запуске БД запускается не мгновенно).
 
 // NewStorage конструктор.
-func NewStorage(log *logger.Log, cfg app.StorageConf) *DB {
+func NewStorage(log app.Logger, cfg app.StorageConf) *DB {
 	return &DB{
 		log:    log,
 		bucket: cfg.Bucket,

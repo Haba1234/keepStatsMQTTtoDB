@@ -82,3 +82,15 @@ func sliceToStrMap(qos byte, topics map[string]config.Topic) map[string]Topic {
 	}
 	return t
 }
+
+// Logger интерфейс для логгера.
+type Logger interface {
+	Info(args ...interface{})
+	Infof(format string, args ...interface{})
+	Error(args ...interface{})
+	Errorf(format string, args ...interface{})
+	// Debug принимает первые два аргумента с выводом в формате name: value, при условии: name - string, value - intergace{}
+	Debug(args ...interface{})
+	// GetLevel возвращает текущий установленный уровень логирования.
+	GetLevel() string
+}
