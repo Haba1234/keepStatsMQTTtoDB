@@ -34,8 +34,7 @@ func main() {
 		fmt.Println("logger error:", err)
 		os.Exit(1)
 	}
-
-	log.Debug("pkg", "main", cfg)
+	log.Debug("pkg", "main", *cfg)
 
 	client := clientmqtt.NewClient(
 		log,
