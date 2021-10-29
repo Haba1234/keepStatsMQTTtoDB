@@ -108,7 +108,7 @@ func (c *ClientMQTT) sub(client mqtt.Client, topics map[string]app.Topic) error 
 		if token.Error() != nil {
 			return token.Error()
 		}
-		c.log.Info("Subscribed to topics %v", filters)
+		c.log.Infof("Subscribed to topics %v", filters)
 	}
 	return nil
 }
