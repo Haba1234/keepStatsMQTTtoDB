@@ -66,3 +66,7 @@ func (l *Log) Debug(args ...interface{}) {
 	}
 	l.Logger.Debug(args...)
 }
+
+func (l *Log) GetLevel() string {
+	return l.Logger.Level.String()
+}
