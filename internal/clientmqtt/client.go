@@ -60,7 +60,7 @@ func (c *ClientMQTT) Start(ctx context.Context, pointsCh chan<- app.Point) error
 		SetConnectionLostHandler(c.connectLostHandler).
 		SetClientID(c.cfgClient.ClientID).
 		SetOrderMatters(false).
-		SetCleanSession(true).
+		SetCleanSession(false).
 		SetAutoReconnect(true).
 		SetConnectRetry(true).
 		SetConnectRetryInterval(5 * time.Second). // TODO добавить в конфиг.
