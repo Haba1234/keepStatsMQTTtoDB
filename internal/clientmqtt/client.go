@@ -136,7 +136,7 @@ func (c *ClientMQTT) sendPointToStorage(msg mqtt.Message) {
 
 	val, ok := c.server.Topics[message.Topic()]
 	if !ok {
-		c.log.Errorf("accepted topic was not found in the database. Recording in DB was canceled")
+		c.log.Error("accepted topic was not found in the database. Recording in DB was canceled")
 		return
 	}
 
